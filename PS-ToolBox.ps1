@@ -1,5 +1,4 @@
-﻿Import-Module WebAdministration
-$art = @'
+﻿$art = @'
  _    _      _                            _          _____               _   _                       
 | |  | |    | |                          | |        |  __ \             | | | |                      
 | |  | | ___| | ___ ___  _ __ ___   ___  | |_ ___   | |  \/_   _ _   _  | |_| | ___ _ __ ___   ___   
@@ -18,19 +17,19 @@ ______                      _____ _          _ _   _____           _______
 
 Write-Host $art -ForegroundColor Yellow -BackgroundColor DarkMagenta
 
-#Import-Module Pscx
-
 # Prompt for server IP address
 
 $server =  $(Write-Host "Enter server IP address: " -ForegroundColor Cyan -NoNewLine; Read-Host)
 
 function MainMenu {
+    Write-Host "Current Server: $server" -ForegroundColor Yellow
     Write-Host "Please select an option:" -ForegroundColor Cyan
     Write-Host "1. Get Hard Disk Capacity" -ForegroundColor Green
     Write-Host "2. Show IIS site status" -ForegroundColor Green
-    Write-Host "3. Exit" -ForegroundColor Red
+    Write-Host "3. Change Server" -ForegroundColor Green
+    Write-Host "4. Exit" -ForegroundColor Red
 
-    $option = $(Write-Host "Enter option (1-3)" -ForegroundColor Cyan -NoNewLine; Read-Host)
+    $option = $(Write-Host "Enter option (1-4): " -ForegroundColor Cyan -NoNewLine; Read-Host)
 
     switch ($option) {
         1 {
@@ -83,18 +82,20 @@ function MainMenu {
                             param($appPool)
                             import-Module WebAdministration
                             Start-WebAppPool -Name $appPool
- #                           $currentAppPoolIndex++
-#                            $progressPercentage = $currentAppPoolIndex / $totalAppPools * 100
-                            #Write-Progress -Activity "Starting Application Pools on $server" -Status "Starting $($appPool.Name)"
                     } -ArgumentList $appPoolName
                     Write-Host "Application pool $($appPoolName) started." -ForegroundColor Green
                 } else {
                     Write-Host "Application pool $($appPoolName) not started." -ForegroundColor Red
                 }
             }
-           }
-        } 
+          }
+        }
         3 {
+         $newserver = $(Write-Host "Please Enter New Server-IP: "  -ForegroundColor Cyan -NoNewLine; Read-Host)
+         $server = $newserver
+         MainMenu
+         }
+        4 {
             Write-Host "Exiting script."  -ForegroundColor Red
             return
         }
