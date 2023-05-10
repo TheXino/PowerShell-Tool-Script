@@ -22,14 +22,15 @@ Write-Host $art -ForegroundColor Yellow -BackgroundColor DarkMagenta
 $server =  $(Write-Host "Enter server IP address: " -ForegroundColor Cyan -NoNewLine; Read-Host)
 
 function MainMenu {
-    Write-Host "Current Server: $server" -ForegroundColor Yellow
-    Write-Host "Please select an option:" -ForegroundColor Cyan
+    Write-Host "Current Server: $server" -ForegroundColor Yellow -BackgroundColor DarkGreen
+    Write-Host "Please select an option: " -ForegroundColor Cyan
     Write-Host "1. Get Hard Disk Capacity" -ForegroundColor Green
-    Write-Host "2. Show IIS site status" -ForegroundColor Green
-    Write-Host "3. Change Server" -ForegroundColor Green
-    Write-Host "4. Exit" -ForegroundColor Red
+    Write-Host "2. IIS Show site status" -ForegroundColor Green
+    Write-Host "3. Sys Info" -ForegroundColor Green
+    Write-Host "4. Change Server" -ForegroundColor Green
+    Write-Host "5. Exit" -ForegroundColor Red
 
-    $option = $(Write-Host "Enter option (1-4): " -ForegroundColor Cyan -NoNewLine; Read-Host)
+    $option = $(Write-Host "Enter option (1-5): " -ForegroundColor Cyan -NoNewLine; Read-Host)
 
     switch ($option) {
         1 {
@@ -91,11 +92,42 @@ function MainMenu {
           }
         }
         3 {
+$choices = @{
+    '1' = 'Get-Service';
+    '2' = 'Get-Process';
+    '3' = 'Get-EventLog';
+    '4' = 'Get-NetIPAddress';
+    '5' = 'Get-NetAdapter';
+    '6' = 'MainMenu';
+}
+
+$validChoice = $false
+
+while(-not $validChoice) {
+    Write-Host "1. Show Services" -ForegroundColor Green
+    Write-Host "2. Show Process" -ForegroundColor Green
+    Write-Host "3. Show EventLog" -ForegroundColor Green
+    Write-Host "4. Display NetIPAddress" -ForegroundColor Green
+    Write-Host "5. Display NetAdapter" -ForegroundColor Green
+    Write-Host "6. Back" -ForegroundColor Red
+
+    $choice = $(Write-Host "Enter option (1-7): " -ForegroundColor Cyan -NoNewLine; Read-Host)
+
+    if ($choices.ContainsKey($choice)) {
+        $validChoice = $true
+        $command = $choices[$choice]
+        Invoke-Expression $command 
+    } else {
+        Write-Host "Invalid choice. Please try again."
+    }
+   }
+ }
+        4 {
          $newserver = $(Write-Host "Please Enter New Server-IP: "  -ForegroundColor Cyan -NoNewLine; Read-Host)
          $server = $newserver
          MainMenu
          }
-        4 {
+        5 {
             Write-Host "Exiting script."  -ForegroundColor Red
             return
         }
